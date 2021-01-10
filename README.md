@@ -149,8 +149,3 @@ Method: `POST`
 
 ## login
 Method: `POST`
-
-## unsubscribe
-Method: `DELETE`
-
-unsubscribe from the mailing list.
