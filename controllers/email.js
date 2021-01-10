@@ -2,11 +2,11 @@ const dbClient = require('../models/dbClient');
 
 const emailController = {
   subscribeEmail: async (request, response) => {
-    const { email } = request.body;
+    const { email, genres } = request.body;
     if (!email) return response.json({ ok: 0, errorMessage: 'Email required.' });
     try {
       const data = await dbClient.db('test').collection('emails')
-        .updateOne({ email }, { $set: { email } }, { upsert: true });
+        .updateOne({ email }, { $set: { email, genres } }, { upsert: true });
       response.json(data.result);
       return console.log('Email saved to DB' + email);
     } catch (error) {

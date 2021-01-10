@@ -15,6 +15,9 @@ const movieController = {
         dataArray = await dbClient.db('test').collection('movies').find().toArray();
       }
       const processedDataArray = genreUtils.genreProcessor(dataArray)
+      processedDataArray.sort((a, b) => {
+        return b.releaseDate - a.releaseDate
+      })
       response.json(processedDataArray);
       console.log('Movies intheaters Data Sent.');
     } catch (error) {
@@ -27,7 +30,10 @@ const movieController = {
     try {
       const dataArray = await dbClient.db('test').collection('movies_thisweek').find().toArray();
       const processedDataArray = genreUtils.genreProcessor(dataArray)
-      response.json(processdDataArray);
+      processedDataArray.sort((a, b) => {
+        return b.releaseDate - a.releaseDate
+      })
+      response.json(processedDataArray);
       console.log('Data Sent');
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });

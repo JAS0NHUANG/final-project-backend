@@ -13,7 +13,6 @@ function genreSwitcher(genreString){
     case '劇情':
     case '喜劇':
     case '勵志':
-    case '音樂/歌舞':
     case '戲劇':
     case '歷史/傳記':
       return '劇情'
@@ -42,7 +41,7 @@ function genreToArray(genreString) {
       return ["'奇幻'", "'科幻'"]
       break
     case '劇情':
-      return ["'劇情'", "'勵志'", "'音樂/歌舞'", "'戲劇'", "'歷史/傳記'", "'喜劇'"]
+      return ["'劇情'", "'勵志'", "'戲劇'", "'歷史/傳記'", "'喜劇'"]
       break
     case '犯罪':
       return ["'犯罪'", "'恐怖'", "'懸疑/驚悚'"]
@@ -51,7 +50,7 @@ function genreToArray(genreString) {
       return ["'愛情'", "'溫馨/家庭'", "'音樂/歌舞'" ]
       break
     default:
-      return [genreString]
+      return [`'${genreString}'`]
   }
 }
 
