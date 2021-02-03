@@ -15,7 +15,8 @@ Query Parameters:
 
 - None
 
-  Response: An array of movie (in theaters) information objects.
+  Response: An array of movie (in theaters) information objects.  
+  Sorted by release date in descending order.  
   A single object example:
   ```
   {
@@ -44,7 +45,7 @@ Query Parameters:
 
 - genre
 
-  Response: Same as above but movies filtered with genre given.
+  Response: Same as above but movies filtered with genre given.  
 
   Request example:
   ```
@@ -70,19 +71,40 @@ URL: `/movie-genres`
 
 Method: `GET`
 
-Response: An array of genre information objects.
-A single object example:
+Response: An array of movie genre strings.  
+Example:
 ```
-{ "_id": "5fc9d2a210f11831c841e376", "genre": "動畫" }
+["犯罪","愛情/溫馨","劇情","動畫","奇幻","紀錄片","動作","影展","影集"]
 ```
 
+
+### unsubscribe
+Unubscribe to the mailing list.  
+Use it by creating an unsubscribe link.  
+No validation right now.  
+
+URL: `/unsubscribe`
+
+Method: `GET`
+
+Query Parameters:  
+
+  - email
+
+    Response: A MongoDB result object.
+
+    Request example: 
+    ```
+    fetch('https://movie-api.jas0nhuang.tw/unsubscribe?email=youremail@email.com')
+      .then(...)
+    ```
 
 ### error
 Shows when error occurs (same for all GET APIs).
 
 Response: An object shown as below:
 ```
-{ "ok": 0, "errorMessage": "Server error"}
+{ "ok": 0, "errorMessage": error}
 ```
 
 ## POST
@@ -102,7 +124,8 @@ Headers:
 }
 ```
 
-Request example:
+Request example: 
+("email" field is required, "genres" field optional.)
 ```
 fetch('http://movie-api.jas0nhuang.tw/subscribe', {
   method: 'POST',
@@ -110,7 +133,8 @@ fetch('http://movie-api.jas0nhuang.tw/subscribe', {
     'content-type': 'application/json'
   },
   body: JSON.stringify({
-    email: '12345@gmail.com'
+    email: 'youremail@email.com',
+    genres: ["動作"，"愛情/溫馨"]
   })
 })
 .then(res => res.json())
@@ -125,8 +149,3 @@ Method: `POST`
 
 ## login
 Method: `POST`
-
-## unsubscribe
-Method: `DELETE`
-
-unsubscribe from the mailing list.
