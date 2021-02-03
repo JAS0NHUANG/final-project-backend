@@ -7,7 +7,7 @@ const emailController = {
     try {
       const data = await dbClient.db('test').collection('emails')
         .updateOne({ email }, { $set: { email, genres } }, { upsert: true });
-      response.json(data.result);
+      response.json(data.result.n);
       return console.log('Email saved to DB' + email);
     } catch (error) {
       response.json({ ok: 0, errorMessage: error });

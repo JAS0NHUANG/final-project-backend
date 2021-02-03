@@ -1,6 +1,20 @@
 const genreUtils = require('../genreUtils')
 const dbClient = require('../models/dbClient');
 
+function filterDupMovies (moviesArray) {
+  const filteredMoviesArray = moviesArray.filter((movie, index, array) => {
+    let noDup = true;
+    for (let i = index + 1; i < array.length; i++) {
+      if (movie.name === array[i].name) {
+        noDup = false;
+        break;
+      }
+    }
+    return (noDup);
+  });
+  return (filteredMoviesArray)
+}
+
 const movieController = {
   getMovies: async (request, response) => {
     const genreStr = request.query.genre;
@@ -18,7 +32,8 @@ const movieController = {
       processedDataArray.sort((a, b) => {
         return b.releaseDate - a.releaseDate
       })
-      response.json(processedDataArray);
+      const filteredDataArray = filterDupMovies(processedDataArray) 
+      response.json(filteredDataArray);
       console.log('Movies intheaters Data Sent.');
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });
@@ -33,7 +48,8 @@ const movieController = {
       processedDataArray.sort((a, b) => {
         return b.releaseDate - a.releaseDate
       })
-      response.json(processedDataArray);
+      const filteredDataArray = filterDupMovies(processedDataArray) 
+      response.json(filteredDataArray);
       console.log('Data Sent');
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });
