@@ -1,5 +1,5 @@
-# Final Project Backend API
-Lidemy mentor-program-4th Final Project Backend API
+# Hello Movie Backend API
+Lidemy mentor-program-4th Final Project Hello Movie Backend API
 
 Base URL: http://movie-api.jas0nhuang.tw/
 
