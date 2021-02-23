@@ -22,9 +22,7 @@ const movieController = {
         dataArray = await dbClient.db('test').collection('movies').find().toArray();
       }
       const processedDataArray = genreUtils.genreProcessor(dataArray)
-      processedDataArray.sort((a, b) => {
-        return b.releaseDate - a.releaseDate
-      })
+      processedDataArray.sort((a, b) => b.releaseDate - a.releaseDate)
       const filteredDataArray = filterDupMovies(processedDataArray) 
       response.json(filteredDataArray);
       console.log('Movies intheaters Data Sent.');
@@ -38,9 +36,7 @@ const movieController = {
     try {
       const dataArray = await dbClient.db('test').collection('movies_thisweek').find().toArray();
       const processedDataArray = genreUtils.genreProcessor(dataArray)
-      processedDataArray.sort((a, b) => {
-        return b.releaseDate - a.releaseDate
-      })
+      processedDataArray.sort((a, b) => b.releaseDate - a.releaseDate)
       const filteredDataArray = filterDupMovies(processedDataArray) 
       response.json(filteredDataArray);
       console.log('Data Sent');
@@ -56,7 +52,7 @@ const movieController = {
       const dataArray = await dbClient.db('test').collection('movie_genres').find().toArray();
       console.log(JSON.stringify(dataArray))
       const dataSet = new Set();
-      dataArray.map(genreData => {
+      dataArray.forEach(genreData => {
         dataSet.add(genreUtils.genreSwitcher(genreData.genre));
       })
       const processedDataArray = [];
