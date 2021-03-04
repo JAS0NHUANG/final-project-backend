@@ -1,40 +1,35 @@
-const genreUtils = require('../genreUtils')
+const genreUtils = require('../genreUtils');
 const dbClient = require('../models/dbClient');
 
-function filterDupMovies (moviesArray) {
-  const filteredMoviesArray = moviesArray.filter((movie, index, array) => {
-    let noDup = true;
-    for (let i = index + 1; i < array.length; i++) {
-      if (movie.name === array[i].name) {
-        noDup = false;
-        break;
-      }
-    }
-    return (noDup);
-  });
-  return (filteredMoviesArray)
-}
+const filterDupMovies = (moviesArray) => moviesArray.reduce((filteredMovies, moviePayload) => {
+  const inFilteredMovies = filteredMovies.includes(moviePayload.name);
+  if (!inFilteredMovies) filteredMovies.push(moviePayload);
+  return (filteredMovies);
+}, []);
 
 const movieController = {
   getMovies: async (request, response) => {
-    const genreStr = request.query.genre;
+    let genreStr = request.query.genre;
     let dataArray = [];
     try {
       if (genreStr) {
         const genreArray = genreUtils.genreToArray(genreStr);
         dataArray = await dbClient.db('test')
           .collection('movies')
-          .find({ genre: { $in: genreArray }}).toArray();
+          .find({ genre: { $in: genreArray } }).toArray();
+        if (dataArray.length === 0) {
+          genreStr = null;
+          dataArray = await dbClient.db('test').collection('movies').find().toArray();
+        }
       } else {
         dataArray = await dbClient.db('test').collection('movies').find().toArray();
       }
-      const processedDataArray = genreUtils.genreProcessor(dataArray)
-      processedDataArray.sort((a, b) => {
-        return b.releaseDate - a.releaseDate
-      })
-      const filteredDataArray = filterDupMovies(processedDataArray) 
+      const processedDataArray = genreUtils.genreProcessor(dataArray);
+      processedDataArray.sort((a, b) => b.releaseDate - a.releaseDate);
+      const filteredDataArray = filterDupMovies(processedDataArray);
       response.json(filteredDataArray);
-      console.log('Movies intheaters Data Sent.');
+      const logMessage = genreStr ? `Movies intheaters (genre: ${genreStr}) data sent.` : 'Movies intheaters data sent.';
+      console.log(logMessage);
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });
       console.log(error);
@@ -44,13 +39,11 @@ const movieController = {
   getMoviesThisweek: async (request, response) => {
     try {
       const dataArray = await dbClient.db('test').collection('movies_thisweek').find().toArray();
-      const processedDataArray = genreUtils.genreProcessor(dataArray)
-      processedDataArray.sort((a, b) => {
-        return b.releaseDate - a.releaseDate
-      })
-      const filteredDataArray = filterDupMovies(processedDataArray) 
+      const processedDataArray = genreUtils.genreProcessor(dataArray);
+      processedDataArray.sort((a, b) => b.releaseDate - a.releaseDate);
+      const filteredDataArray = filterDupMovies(processedDataArray);
       response.json(filteredDataArray);
-      console.log('Data Sent');
+      console.log('Movies this week data Sent.');
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });
       console.log(error);
@@ -61,17 +54,17 @@ const movieController = {
     console.log(request.query.genre);
     try {
       const dataArray = await dbClient.db('test').collection('movie_genres').find().toArray();
-      console.log(JSON.stringify(dataArray))
+      console.log(JSON.stringify(dataArray));
       const dataSet = new Set();
-      dataArray.map(genreData => {
+      dataArray.forEach((genreData) => {
         dataSet.add(genreUtils.genreSwitcher(genreData.genre));
-      })
+      });
       const processedDataArray = [];
-      dataSet.forEach(genre => {
-        processedDataArray.push(genre)
-      })
+      dataSet.forEach((genre) => {
+        processedDataArray.push(genre);
+      });
       response.json(processedDataArray);
-      console.log('Genre data sent successfully.');
+      console.log('Genre data sent.');
     } catch (error) {
       response.json({ ok: 0, errorMessage: 'Server error' });
       console.log(error);
