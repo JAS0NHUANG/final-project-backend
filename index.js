@@ -6,9 +6,9 @@ const startApp = async () => {
     const app = await createApp();
     await app.listen(APP_PORT);
     console.log('Hello Movie!');
-  } catch(error) {
+  } catch (error) {
     console.log(error);
   }
-}
+};
 
 startApp();
