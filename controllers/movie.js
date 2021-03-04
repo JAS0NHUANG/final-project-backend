@@ -1,19 +1,11 @@
 const genreUtils = require('../genreUtils')
 const dbClient = require('../models/dbClient');
 
-function filterDupMovies (moviesArray) {
-  const filteredMoviesArray = moviesArray.filter((movie, index, array) => {
-    let noDup = true;
-    for (let i = index + 1; i < array.length; i++) {
-      if (movie.name === array[i].name) {
-        noDup = false;
-        break;
-      }
-    }
-    return (noDup);
-  });
-  return (filteredMoviesArray)
-}
+const filterDupMovies = moviesArray => moviesArray.reduce((filteredMovies, moviePayload) => {
+    const inFilteredMovies = filteredMovies.includes(moviePayload.name);
+    if (!inFilteredMovies) filteredMovies.push(moviePayload);
+    return (filteredMovies)
+  }, [])
 
 const movieController = {
   getMovies: async (request, response) => {
